@@ -1,0 +1,204 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply antialiased;
+  }
+  
+  body {
+    @apply bg-gradient-to-br from-gray-50 to-gray-100;
+  }
+  
+  /* Mobile-first: Native app feel */
+  @media (max-width: 768px) {
+    body {
+      @apply bg-gradient-to-b from-blue-50 to-indigo-50;
+    }
+  }
+  
+  /* Desktop: Native software feel */
+  @media (min-width: 1024px) {
+    body {
+      @apply bg-gray-50;
+    }
+  }
+}
+
+@layer components {
+  /* Mobile: Card-based design */
+  .voucher-container {
+    @apply border-2 border-gray-800 p-4 mb-4 bg-white shadow-lg relative;
+  }
+  
+  @media (max-width: 768px) {
+    .voucher-container {
+      @apply rounded-2xl border-gray-300 shadow-xl;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .voucher-container {
+      @apply border-gray-700 shadow-2xl;
+    }
+  }
+  
+  .print-strip {
+    background-color: #f472b6;
+  }
+  
+  @media print {
+    .print-strip {
+      background-color: #f472b6 !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+  }
+  
+  /* Mobile: Larger touch targets */
+  .voucher-input {
+    @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all;
+  }
+  
+  @media (max-width: 768px) {
+    .voucher-input {
+      @apply text-base py-3.5 rounded-xl bg-white shadow-sm;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .voucher-input {
+      @apply py-2.5 rounded-md;
+    }
+  }
+  
+  .voucher-label {
+    @apply block text-sm font-medium text-gray-700 mb-2;
+  }
+  
+  @media (max-width: 768px) {
+    .voucher-label {
+      @apply text-base font-semibold mb-2.5;
+    }
+  }
+  
+  /* Mobile: Native button styles */
+  .btn-primary {
+    @apply bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all shadow-md active:scale-95;
+  }
+  
+  @media (max-width: 768px) {
+    .btn-primary {
+      @apply py-4 rounded-xl text-base shadow-lg w-full;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .btn-primary {
+      @apply py-2.5 rounded-md shadow-sm;
+    }
+  }
+  
+  .btn-secondary {
+    @apply bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all shadow-md active:scale-95;
+  }
+  
+  @media (max-width: 768px) {
+    .btn-secondary {
+      @apply py-4 rounded-xl text-base shadow-lg w-full;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .btn-secondary {
+      @apply py-2.5 rounded-md shadow-sm;
+    }
+  }
+  
+  /* Mobile: Floating action button style */
+  .btn-floating {
+    @apply fixed bottom-6 right-6 w-14 h-14 rounded-full bg-blue-600 text-white shadow-2xl hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all active:scale-90 z-50 flex items-center justify-center text-2xl;
+  }
+  
+  @media (min-width: 768px) {
+    .btn-floating {
+      @apply hidden;
+    }
+  }
+  
+  /* Desktop: Window-like container */
+  .desktop-container {
+    @apply hidden;
+  }
+  
+  @media (min-width: 1024px) {
+    .desktop-container {
+      @apply block bg-white rounded-lg shadow-2xl border border-gray-200 p-6;
+    }
+  }
+  
+  /* Mobile: Bottom sheet style */
+  .mobile-sheet {
+    @apply block;
+  }
+  
+  @media (min-width: 768px) {
+    .mobile-sheet {
+      @apply hidden;
+    }
+  }
+}
+
+@media print {
+  @page {
+    size: A4;
+    margin: 0;
+  }
+  
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  
+  body {
+    background: white;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .no-print {
+    display: none !important;
+  }
+  
+  .voucher-container {
+    page-break-inside: avoid;
+    margin: 0;
+    border: 2px solid #000;
+    box-shadow: none;
+  }
+  
+  .print-voucher {
+    width: 100%;
+    height: auto;
+  }
+  
+  /* Ensure exactly 2 vouchers per A4 page */
+  .voucher-pair {
+    height: 50vh;
+    page-break-after: always;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3cm;
+  }
+  
+  .voucher-pair:last-child {
+    page-break-after: auto;
+  }
+  
+  .voucher-pair .voucher {
+    height: calc(50% - 0.15cm);
+    min-height: auto;
+  }
+}
+
