@@ -246,22 +246,22 @@ export default function Home() {
                   <div style="font-weight: bold; margin-bottom: 0.1cm;">Rs.</div>
                   <div style="border-bottom: 1px solid #000; padding-bottom: 0.05cm; min-height: 0.4cm;">${v.amount.toFixed(2)}</div>
                 </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 0.2cm; margin-top: 0.3cm; padding-top: 0.2cm;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 0.2cm; margin-top: 1.2cm; padding-top: 0.8cm;">
                   <div>
-                    <div style="font-weight: bold; font-size: 8pt; margin-bottom: 0.1cm;">Prepared by</div>
-                    <div style="border-bottom: 1px solid #000; height: 0.6cm;"></div>
+                    <div style="border-bottom: 1px solid #000; height: 0.6cm; margin-bottom: 0.1cm;"></div>
+                    <div style="font-weight: bold; font-size: 8pt;">Prepared by</div>
                   </div>
                   <div>
-                    <div style="font-weight: bold; font-size: 8pt; margin-bottom: 0.1cm;">Checked by</div>
-                    <div style="border-bottom: 1px solid #000; height: 0.6cm;"></div>
+                    <div style="border-bottom: 1px solid #000; height: 0.6cm; margin-bottom: 0.1cm;"></div>
+                    <div style="font-weight: bold; font-size: 8pt;">Checked by</div>
                   </div>
                   <div>
-                    <div style="font-weight: bold; font-size: 8pt; margin-bottom: 0.1cm;">Approved by</div>
-                    <div style="border-bottom: 1px solid #000; height: 0.6cm;"></div>
+                    <div style="border-bottom: 1px solid #000; height: 0.6cm; margin-bottom: 0.1cm;"></div>
+                    <div style="font-weight: bold; font-size: 8pt;">Approved by</div>
                   </div>
                   <div>
-                    <div style="font-weight: bold; font-size: 8pt; margin-bottom: 0.1cm;">Recd. Payment</div>
-                    <div style="border-bottom: 1px solid #000; height: 0.6cm;"></div>
+                    <div style="border-bottom: 1px solid #000; height: 0.6cm; margin-bottom: 0.1cm;"></div>
+                    <div style="font-weight: bold; font-size: 8pt;">Recd. Payment</div>
                   </div>
                 </div>
               </div>
@@ -576,22 +576,22 @@ export default function Home() {
                   <div style="font-weight: bold; margin-bottom: 0.1cm; color: #000;">Rs.</div>
                   <div style="border-bottom: 1px solid #000; padding-bottom: 0.08cm; min-height: 0.5cm; color: #000;">${v.amount.toFixed(2)}</div>
                 </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 0.3cm; margin-top: 0.4cm; padding-top: 0.3cm; padding: 0 0.2cm;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 0.3cm; margin-top: 1.5cm; padding-top: 1cm; padding: 0 0.2cm;">
                   <div>
-                    <div style="font-weight: bold; font-size: 8pt; margin-bottom: 0.15cm; color: #000;">Prepared by</div>
-                    <div style="border-bottom: 1px solid #000; height: 0.7cm;"></div>
+                    <div style="border-bottom: 1px solid #000; height: 0.7cm; margin-bottom: 0.15cm;"></div>
+                    <div style="font-weight: bold; font-size: 8pt; color: #000;">Prepared by</div>
                   </div>
                   <div>
-                    <div style="font-weight: bold; font-size: 8pt; margin-bottom: 0.15cm; color: #000;">Checked by</div>
-                    <div style="border-bottom: 1px solid #000; height: 0.7cm;"></div>
+                    <div style="border-bottom: 1px solid #000; height: 0.7cm; margin-bottom: 0.15cm;"></div>
+                    <div style="font-weight: bold; font-size: 8pt; color: #000;">Checked by</div>
                   </div>
                   <div>
-                    <div style="font-weight: bold; font-size: 8pt; margin-bottom: 0.15cm; color: #000;">Approved by</div>
-                    <div style="border-bottom: 1px solid #000; height: 0.7cm;"></div>
+                    <div style="border-bottom: 1px solid #000; height: 0.7cm; margin-bottom: 0.15cm;"></div>
+                    <div style="font-weight: bold; font-size: 8pt; color: #000;">Approved by</div>
                   </div>
                   <div>
-                    <div style="font-weight: bold; font-size: 8pt; margin-bottom: 0.15cm; color: #000;">Recd. Payment</div>
-                    <div style="border-bottom: 1px solid #000; height: 0.7cm;"></div>
+                    <div style="border-bottom: 1px solid #000; height: 0.7cm; margin-bottom: 0.15cm;"></div>
+                    <div style="font-weight: bold; font-size: 8pt; color: #000;">Recd. Payment</div>
                   </div>
                 </div>
               </div>

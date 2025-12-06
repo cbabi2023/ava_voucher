@@ -128,22 +128,22 @@ function VoucherDisplay({ voucher }: VoucherDisplayProps) {
         </div>
 
         {/* Footer Section - Four Signatures in a row */}
-        <div className="grid grid-cols-4 gap-4 mt-8 pt-4">
+        <div className="grid grid-cols-4 gap-4 mt-16 pt-8">
           <div>
-            <div className="font-semibold text-black mb-2 text-xs">Prepared by</div>
-            <div className="border-b border-black pb-1 min-h-[40px]"></div>
+            <div className="border-b border-black pb-1 min-h-[40px] mb-2"></div>
+            <div className="font-semibold text-black text-xs">Prepared by</div>
           </div>
           <div>
-            <div className="font-semibold text-black mb-2 text-xs">Checked by</div>
-            <div className="border-b border-black pb-1 min-h-[40px]"></div>
+            <div className="border-b border-black pb-1 min-h-[40px] mb-2"></div>
+            <div className="font-semibold text-black text-xs">Checked by</div>
           </div>
           <div>
-            <div className="font-semibold text-black mb-2 text-xs">Approved by</div>
-            <div className="border-b border-black pb-1 min-h-[40px]"></div>
+            <div className="border-b border-black pb-1 min-h-[40px] mb-2"></div>
+            <div className="font-semibold text-black text-xs">Approved by</div>
           </div>
           <div>
-            <div className="font-semibold text-black mb-2 text-xs">Recd. Payment</div>
-            <div className="border-b border-black pb-1 min-h-[40px]"></div>
+            <div className="border-b border-black pb-1 min-h-[40px] mb-2"></div>
+            <div className="font-semibold text-black text-xs">Recd. Payment</div>
           </div>
         </div>
       </div>
