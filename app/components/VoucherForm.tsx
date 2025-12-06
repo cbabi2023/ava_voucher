@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback, useMemo, memo } from 'react'
 import { Voucher } from '../types/voucher'
 
 interface VoucherFormProps {
@@ -8,30 +8,32 @@ interface VoucherFormProps {
   voucher?: Voucher
 }
 
-export default function VoucherForm({ onSave, voucher }: VoucherFormProps) {
-  const [formData, setFormData] = useState<Omit<Voucher, 'id' | 'createdAt'>>({
-    titleSuffix: voucher?.titleSuffix || '',
-    paymentType: voucher?.paymentType || 'cash',
-    voucherHeading: voucher?.voucherHeading || '',
-    voucherNumber: voucher?.voucherNumber || '',
-    date: voucher?.date || new Date().toISOString().split('T')[0],
-    accountHead: voucher?.accountHead || '',
-    payTo: voucher?.payTo || '',
-    sumOfRs: voucher?.sumOfRs || '',
-    towards: voucher?.towards || '',
-    amount: voucher?.amount || 0,
-    preparedBy: voucher?.preparedBy || '',
-    checkedBy: voucher?.checkedBy || '',
-    approvedBy: voucher?.approvedBy || '',
-    receivedBy: voucher?.receivedBy || '',
-  })
+function VoucherForm({ onSave, voucher }: VoucherFormProps) {
+  const getInitialFormData = useCallback(() => {
+    return {
+      companySuffix: voucher?.companySuffix || '',
+      paymentType: voucher?.paymentType || 'cash',
+      voucherNumber: voucher?.voucherNumber || '',
+      date: voucher?.date || new Date().toISOString().split('T')[0],
+      accountHead: voucher?.accountHead || '',
+      payTo: voucher?.payTo || '',
+      sumOfRs: voucher?.sumOfRs || '',
+      towards: voucher?.towards || '',
+      amount: voucher?.amount || 0,
+      preparedBy: voucher?.preparedBy || '',
+      checkedBy: voucher?.checkedBy || '',
+      approvedBy: voucher?.approvedBy || '',
+      receivedBy: voucher?.receivedBy || '',
+    } as Omit<Voucher, 'id' | 'createdAt'>
+  }, [voucher])
+
+  const [formData, setFormData] = useState<Omit<Voucher, 'id' | 'createdAt'>>(() => getInitialFormData())
 
   useEffect(() => {
     if (voucher) {
       setFormData({
-        titleSuffix: voucher.titleSuffix,
+        companySuffix: voucher.companySuffix,
         paymentType: voucher.paymentType,
-        voucherHeading: voucher.voucherHeading,
         voucherNumber: voucher.voucherNumber,
         date: voucher.date,
         accountHead: voucher.accountHead,
@@ -44,58 +46,82 @@ export default function VoucherForm({ onSave, voucher }: VoucherFormProps) {
         approvedBy: voucher.approvedBy,
         receivedBy: voucher.receivedBy,
       })
+    } else {
+      setFormData(getInitialFormData())
     }
-  }, [voucher])
+  }, [voucher, getInitialFormData])
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setFormData(prev => ({
       ...prev,
       [name]: name === 'amount' ? parseFloat(value) || 0 : value
     }))
-  }
+  }, [])
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault()
-    const newVoucher: Voucher = {
-      ...formData,
-      id: voucher?.id || Date.now().toString(),
-      createdAt: voucher?.createdAt || Date.now()
+    
+    // Validation
+    if (!formData.voucherNumber.trim()) {
+      alert('Please enter a voucher number')
+      return
     }
-    onSave(newVoucher)
-    if (!voucher) {
-      // Reset form if creating new voucher
-      setFormData({
-        titleSuffix: '',
-        paymentType: 'cash',
-        voucherHeading: '',
-        voucherNumber: '',
-        date: new Date().toISOString().split('T')[0],
-        accountHead: '',
-        payTo: '',
-        sumOfRs: '',
-        towards: '',
-        amount: 0,
-        preparedBy: '',
-        checkedBy: '',
-        approvedBy: '',
-        receivedBy: '',
-      })
+    if (!formData.accountHead.trim()) {
+      alert('Please enter an account head')
+      return
     }
-  }
+    if (!formData.payTo.trim()) {
+      alert('Please enter pay to information')
+      return
+    }
+    if (formData.amount <= 0) {
+      alert('Please enter a valid amount')
+      return
+    }
+
+    try {
+      const newVoucher: Voucher = {
+        ...formData,
+        id: voucher?.id || Date.now().toString(),
+        createdAt: voucher?.createdAt || Date.now()
+      }
+      onSave(newVoucher)
+      if (!voucher) {
+        // Reset form if creating new voucher
+        setFormData({
+          companySuffix: '',
+          paymentType: 'cash',
+          voucherNumber: '',
+          date: new Date().toISOString().split('T')[0],
+          accountHead: '',
+          payTo: '',
+          sumOfRs: '',
+          towards: '',
+          amount: 0,
+          preparedBy: '',
+          checkedBy: '',
+          approvedBy: '',
+          receivedBy: '',
+        })
+      }
+    } catch (error) {
+      console.error('Error saving voucher:', error)
+      alert('An error occurred while saving the voucher. Please try again.')
+    }
+  }, [formData, voucher, onSave])
 
   const formFields = (
     <>
       <div>
-        <label className="voucher-label">Title Suffix (after AVA)</label>
+        <label className="voucher-label">Company Name (Optional - e.g., Productions, Entertainments)</label>
         <input
           type="text"
-          name="titleSuffix"
-          value={formData.titleSuffix}
+          name="companySuffix"
+          value={formData.companySuffix}
           onChange={handleChange}
           className="voucher-input"
-          required
-          placeholder="e.g., Payment Voucher"
+          placeholder="Leave empty for just 'AVA'"
         />
       </div>
 
@@ -110,20 +136,8 @@ export default function VoucherForm({ onSave, voucher }: VoucherFormProps) {
         >
           <option value="cash">Cash</option>
           <option value="bank_transfer">Bank Transfer</option>
+          <option value="upi">UPI</option>
         </select>
-      </div>
-
-      <div>
-        <label className="voucher-label">Voucher Heading</label>
-        <input
-          type="text"
-          name="voucherHeading"
-          value={formData.voucherHeading}
-          onChange={handleChange}
-          className="voucher-input"
-          required
-          placeholder="e.g., Payment Voucher"
-        />
       </div>
 
       <div>
@@ -218,53 +232,6 @@ export default function VoucherForm({ onSave, voucher }: VoucherFormProps) {
         />
       </div>
 
-      <div>
-        <label className="voucher-label">Prepared By</label>
-        <input
-          type="text"
-          name="preparedBy"
-          value={formData.preparedBy}
-          onChange={handleChange}
-          className="voucher-input"
-          placeholder="Name"
-        />
-      </div>
-
-      <div>
-        <label className="voucher-label">Checked By</label>
-        <input
-          type="text"
-          name="checkedBy"
-          value={formData.checkedBy}
-          onChange={handleChange}
-          className="voucher-input"
-          placeholder="Name"
-        />
-      </div>
-
-      <div>
-        <label className="voucher-label">Approved By</label>
-        <input
-          type="text"
-          name="approvedBy"
-          value={formData.approvedBy}
-          onChange={handleChange}
-          className="voucher-input"
-          placeholder="Name"
-        />
-      </div>
-
-      <div>
-        <label className="voucher-label">Received By</label>
-        <input
-          type="text"
-          name="receivedBy"
-          value={formData.receivedBy}
-          onChange={handleChange}
-          className="voucher-input"
-          placeholder="Name"
-        />
-      </div>
     </>
   )
 
@@ -294,3 +261,5 @@ export default function VoucherForm({ onSave, voucher }: VoucherFormProps) {
     </form>
   )
 }
+
+export default memo(VoucherForm)

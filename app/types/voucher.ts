@@ -1,8 +1,7 @@
 export interface Voucher {
   id: string;
-  titleSuffix: string;
-  paymentType: 'cash' | 'bank_transfer';
-  voucherHeading: string;
+  companySuffix: string; // Optional company name after AVA (e.g., "Productions", "Entertainments")
+  paymentType: 'cash' | 'bank_transfer' | 'upi';
   voucherNumber: string;
   date: string;
   accountHead: string;
