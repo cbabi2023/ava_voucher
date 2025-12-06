@@ -36,6 +36,73 @@ const escapeHtml = (text: string): string => {
   return div.innerHTML
 }
 
+// Generate professional voucher HTML (used by both print and PDF)
+const generateVoucherHTML = (v: Voucher, formatDate: (date: string) => string): string => {
+  return `
+    <div class="voucher" style="position: relative;">
+      <div style="position: absolute; top: 0; right: 0; width: 0.3cm; height: 100%; background-color: #f472b6; -webkit-print-color-adjust: exact; print-color-adjust: exact;"></div>
+      <div style="padding-right: 0.4cm; height: 100%; display: flex; flex-direction: column;">
+        <div style="text-align: center; margin-bottom: 0.4cm; margin-top: 0.15cm;">
+          <h1 style="font-size: 20pt; font-weight: bold; text-transform: uppercase; margin: 0; margin-bottom: 0.08cm; letter-spacing: 0.05em;">AVA${v.companySuffix ? ` ${escapeHtml(v.companySuffix)}` : ''}</h1>
+          <div style="width: 3.5cm; height: 1.5px; background: #000; margin: 0 auto 0.12cm;"></div>
+          <div style="display: inline-block; background: #4b5563; color: white; padding: 0.12cm 0.35cm; border-radius: 0.2cm; font-size: 9.5pt; font-weight: 600; margin-bottom: 0.08cm;">Voucher</div>
+          <div style="font-size: 9pt; margin-top: 0.08cm; font-weight: 500;">${v.paymentType === 'cash' ? 'Cash' : v.paymentType === 'bank_transfer' ? 'Bank Transfer' : 'UPI'}</div>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.35cm; font-size: 9pt; padding: 0 0.1cm;">
+          <div style="flex: 1;">
+            <div style="font-weight: 600; margin-bottom: 0.12cm; font-size: 8.5pt;">Vr. No.</div>
+            <div style="border-bottom: 1.5px solid #000; padding-bottom: 0.08cm; min-height: 0.5cm; font-size: 9pt;">${escapeHtml(v.voucherNumber)}</div>
+          </div>
+          <div style="flex: 1; margin-left: 0.4cm;">
+            <div style="font-weight: 600; margin-bottom: 0.12cm; font-size: 8.5pt;">Date:</div>
+            <div style="border-bottom: 1.5px solid #000; padding-bottom: 0.08cm; min-height: 0.5cm; font-size: 9pt;">${escapeHtml(formatDate(v.date))}</div>
+          </div>
+        </div>
+        <div style="margin-bottom: 0.3cm; font-size: 9pt; padding: 0 0.1cm;">
+          <div style="font-weight: 600; margin-bottom: 0.12cm; font-size: 8.5pt;">Account Head</div>
+          <div style="border: 1.5px solid #000; padding: 0.25cm 0.2cm; min-height: 0.9cm; background: white; font-size: 9pt; line-height: 1.3;">${escapeHtml(v.accountHead)}</div>
+        </div>
+        <div style="margin-bottom: 0.3cm; font-size: 9pt; padding: 0 0.1cm;">
+          <div style="font-weight: 600; margin-bottom: 0.12cm; font-size: 8.5pt;">Pay to</div>
+          <div style="border-bottom: 1.5px solid #000; padding-bottom: 0.08cm; min-height: 0.5cm; font-size: 9pt;">${escapeHtml(v.payTo)}</div>
+        </div>
+        <div style="margin-bottom: 0.3cm; font-size: 9pt; padding: 0 0.1cm;">
+          <div style="font-weight: 600; margin-bottom: 0.12cm; font-size: 8.5pt;">the sum of Rs.</div>
+          <div style="border-bottom: 1.5px solid #000; padding-bottom: 0.08cm; min-height: 0.5cm; font-size: 9pt; line-height: 1.3;">${escapeHtml(v.sumOfRs)}</div>
+        </div>
+        <div style="margin-bottom: 0.3cm; font-size: 9pt; padding: 0 0.1cm;">
+          <div style="font-weight: 600; margin-bottom: 0.12cm; font-size: 8.5pt;">towards</div>
+          <div style="border-bottom: 1.5px solid #000; padding-bottom: 0.08cm; min-height: 0.5cm; font-size: 9pt;">${escapeHtml(v.towards)}</div>
+        </div>
+        <div style="margin-bottom: 0.3cm; font-size: 9pt; width: 45%; padding: 0 0.1cm;">
+          <div style="font-weight: 600; margin-bottom: 0.12cm; font-size: 8.5pt;">Rs.</div>
+          <div style="border-bottom: 1.5px solid #000; padding-bottom: 0.08cm; min-height: 0.5cm; font-size: 9pt; font-weight: 500;">${v.amount.toFixed(2)}</div>
+        </div>
+        <div style="flex: 1; display: flex; align-items: flex-end; margin-top: auto; padding-top: 0.5cm;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 0.25cm; width: 100%; padding: 0 0.1cm;">
+            <div style="text-align: center;">
+              <div style="border-bottom: 1.5px solid #000; height: 0.7cm; margin-bottom: 0.12cm; width: 100%;"></div>
+              <div style="font-weight: 600; font-size: 7.5pt; text-align: center;">Prepared by</div>
+            </div>
+            <div style="text-align: center;">
+              <div style="border-bottom: 1.5px solid #000; height: 0.7cm; margin-bottom: 0.12cm; width: 100%;"></div>
+              <div style="font-weight: 600; font-size: 7.5pt; text-align: center;">Checked by</div>
+            </div>
+            <div style="text-align: center;">
+              <div style="border-bottom: 1.5px solid #000; height: 0.7cm; margin-bottom: 0.12cm; width: 100%;"></div>
+              <div style="font-weight: 600; font-size: 7.5pt; text-align: center;">Approved by</div>
+            </div>
+            <div style="text-align: center;">
+              <div style="border-bottom: 1.5px solid #000; height: 0.7cm; margin-bottom: 0.12cm; width: 100%;"></div>
+              <div style="font-weight: 600; font-size: 7.5pt; text-align: center;">Recd. Payment</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `
+}
+
 export default function Home() {
   const [vouchers, setVouchers] = useState<Voucher[]>([])
   const [selectedVouchers, setSelectedVouchers] = useState<string[]>([])
@@ -194,7 +261,7 @@ export default function Home() {
         // Always ensure 2 vouchers per pair
         const vouchersToRender = pair.length === 1 ? [pair[0], null] : pair
         
-        const pairHTML = vouchersToRender.map((v, index) => {
+        const pairHTML = vouchersToRender.map((v) => {
           if (v === null) {
             // Empty placeholder for odd number of vouchers
             return `
@@ -206,67 +273,7 @@ export default function Home() {
             `
           }
           
-          return `
-            <div class="voucher" style="position: relative;">
-              <div style="position: absolute; top: 0; right: 0; width: 0.3cm; height: 100%; background-color: #f472b6; -webkit-print-color-adjust: exact; print-color-adjust: exact;"></div>
-              <div style="padding-right: 0.4cm;">
-                <div style="text-align: center; margin-bottom: 0.3cm;">
-                  <h1 style="font-size: 18pt; font-weight: bold; text-transform: uppercase; margin: 0; margin-bottom: 0.1cm;">AVA${v.companySuffix ? ` ${escapeHtml(v.companySuffix)}` : ''}</h1>
-                  <div style="width: 3cm; height: 1px; background: #000; margin: 0 auto 0.15cm;"></div>
-                  <div style="display: inline-block; background: #4b5563; color: white; padding: 0.1cm 0.3cm; border-radius: 0.15cm; font-size: 9pt; font-weight: 600; margin-bottom: 0.1cm;">Voucher</div>
-                  <div style="font-size: 9pt; margin-top: 0.1cm;">${v.paymentType === 'cash' ? 'Cash' : v.paymentType === 'bank_transfer' ? 'Bank Transfer' : 'UPI'}</div>
-                </div>
-                <div style="display: flex; justify-content: space-between; margin-bottom: 0.3cm; font-size: 9pt;">
-                  <div style="flex: 1;">
-                    <div style="font-weight: bold; margin-bottom: 0.1cm;">Vr. No.</div>
-                    <div style="border-bottom: 1px solid #000; padding-bottom: 0.05cm; min-height: 0.4cm;">${escapeHtml(v.voucherNumber)}</div>
-                  </div>
-                  <div style="flex: 1; margin-left: 0.3cm;">
-                    <div style="font-weight: bold; margin-bottom: 0.1cm;">Date:</div>
-                    <div style="border-bottom: 1px solid #000; padding-bottom: 0.05cm; min-height: 0.4cm;">${escapeHtml(formatDate(v.date))}</div>
-                  </div>
-                </div>
-                <div style="margin-bottom: 0.2cm; font-size: 9pt;">
-                  <div style="font-weight: bold; margin-bottom: 0.1cm;">Account Head</div>
-                  <div style="border: 1px solid #000; padding: 0.2cm; min-height: 0.8cm; background: white;">${escapeHtml(v.accountHead)}</div>
-                </div>
-                <div style="margin-bottom: 0.2cm; font-size: 9pt;">
-                  <div style="font-weight: bold; margin-bottom: 0.1cm;">Pay to</div>
-                  <div style="border-bottom: 1px solid #000; padding-bottom: 0.05cm; min-height: 0.4cm;">${escapeHtml(v.payTo)}</div>
-                </div>
-                <div style="margin-bottom: 0.2cm; font-size: 9pt;">
-                  <div style="font-weight: bold; margin-bottom: 0.1cm;">the sum of Rs.</div>
-                  <div style="border-bottom: 1px solid #000; padding-bottom: 0.05cm; min-height: 0.4cm;">${escapeHtml(v.sumOfRs)}</div>
-                </div>
-                <div style="margin-bottom: 0.2cm; font-size: 9pt;">
-                  <div style="font-weight: bold; margin-bottom: 0.1cm;">towards</div>
-                  <div style="border-bottom: 1px solid #000; padding-bottom: 0.05cm; min-height: 0.4cm;">${escapeHtml(v.towards)}</div>
-                </div>
-                <div style="margin-bottom: 0.2cm; font-size: 9pt; width: 50%;">
-                  <div style="font-weight: bold; margin-bottom: 0.1cm;">Rs.</div>
-                  <div style="border-bottom: 1px solid #000; padding-bottom: 0.05cm; min-height: 0.4cm;">${v.amount.toFixed(2)}</div>
-                </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 0.2cm; margin-top: 1.2cm; padding-top: 0.8cm;">
-                  <div>
-                    <div style="border-bottom: 1px solid #000; height: 0.6cm; margin-bottom: 0.1cm;"></div>
-                    <div style="font-weight: bold; font-size: 8pt;">Prepared by</div>
-                  </div>
-                  <div>
-                    <div style="border-bottom: 1px solid #000; height: 0.6cm; margin-bottom: 0.1cm;"></div>
-                    <div style="font-weight: bold; font-size: 8pt;">Checked by</div>
-                  </div>
-                  <div>
-                    <div style="border-bottom: 1px solid #000; height: 0.6cm; margin-bottom: 0.1cm;"></div>
-                    <div style="font-weight: bold; font-size: 8pt;">Approved by</div>
-                  </div>
-                  <div>
-                    <div style="border-bottom: 1px solid #000; height: 0.6cm; margin-bottom: 0.1cm;"></div>
-                    <div style="font-weight: bold; font-size: 8pt;">Recd. Payment</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          `
+          return generateVoucherHTML(v, formatDate)
         }).join('')
         
         return `<div class="voucher-pair">${pairHTML}</div>`
@@ -310,13 +317,14 @@ export default function Home() {
               }
               .voucher {
                 border: 2px solid #000;
-                padding: 0.4cm;
+                padding: 0.45cm;
                 width: 100%;
                 height: calc(50% - 0.15cm);
                 display: flex;
                 flex-direction: column;
                 background: white;
                 position: relative;
+                box-sizing: border-box;
               }
               .voucher::after {
                 content: '';
@@ -478,14 +486,14 @@ export default function Home() {
       loadingMsg.textContent = 'Generating PDF... Please wait'
       document.body.appendChild(loadingMsg)
 
-      // Create a temporary container for rendering
-      const tempContainer = document.createElement('div')
-      tempContainer.style.position = 'absolute'
-      tempContainer.style.left = '-9999px'
-      tempContainer.style.width = '210mm' // A4 width
-      tempContainer.style.background = 'white'
-      tempContainer.style.fontFamily = 'Arial, sans-serif'
-      document.body.appendChild(tempContainer)
+      // Create a hidden iframe with the same HTML structure as print
+      const iframe = document.createElement('iframe')
+      iframe.style.position = 'absolute'
+      iframe.style.left = '-9999px'
+      iframe.style.width = '210mm'
+      iframe.style.height = '297mm'
+      iframe.style.border = 'none'
+      document.body.appendChild(iframe)
 
       // Ensure we have pairs of 2 for A4 printing
       const pairs: Voucher[][] = []
@@ -493,119 +501,98 @@ export default function Home() {
         pairs.push(selectedVoucherData.slice(i, i + 2))
       }
 
-      const escapeHtml = (text: string): string => {
-        const div = document.createElement('div')
-        div.textContent = text
-        return div.innerHTML
-      }
-
-      // Create HTML for each pair
-      pairs.forEach((pair, pairIndex) => {
-        const pairDiv = document.createElement('div')
-        pairDiv.style.cssText = `
-          display: flex;
-          flex-direction: column;
-          gap: 0.3cm;
-          page-break-after: always;
-          height: 29.7cm;
-          padding: 0.5cm;
-          margin-bottom: ${pairIndex < pairs.length - 1 ? '0.5cm' : '0'};
-        `
-        
+      // Generate the same HTML as print function
+      const voucherHTML = pairs.map(pair => {
         const vouchersToRender = pair.length === 1 ? [pair[0], null] : pair
         
-        vouchersToRender.forEach((v) => {
-          const voucherDiv = document.createElement('div')
-          voucherDiv.style.cssText = `
-            border: 2px solid #000;
-            padding: 0.4cm;
-            width: 100%;
-            height: calc(50% - 0.15cm);
-            display: flex;
-            flex-direction: column;
-            background: white;
-            position: relative;
-            overflow: hidden;
-            box-sizing: border-box;
-          `
-          
+        const pairHTML = vouchersToRender.map((v) => {
           if (v === null) {
-            voucherDiv.innerHTML = `
-              <div style="text-align: center; padding: 3cm 0; color: #999; font-size: 10pt;">
-                Empty Slot
-              </div>
-            `
-          } else {
-            const paymentTypeText = v.paymentType === 'cash' ? 'Cash' : v.paymentType === 'bank_transfer' ? 'Bank Transfer' : 'UPI'
-            voucherDiv.innerHTML = `
-              <div style="position: absolute; top: 0; right: 0; width: 0.5cm; height: 100%; background-color: #f472b6 !important; z-index: 1; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;"></div>
-              <div style="padding-right: 0.6cm; position: relative; z-index: 0;">
-                <div style="text-align: center; margin-bottom: 0.3cm; margin-top: 0.2cm;">
-                  <h1 style="font-size: 20pt; font-weight: bold; text-transform: uppercase; margin: 0; margin-bottom: 0.1cm; letter-spacing: 0.05em;">AVA${v.companySuffix ? ` ${escapeHtml(v.companySuffix)}` : ''}</h1>
-                  <div style="width: 4cm; height: 1px; background: #000; margin: 0 auto 0.15cm;"></div>
-                  <div style="display: inline-block; background: #4b5563; color: white; padding: 0.15cm 0.4cm; border-radius: 0.2cm; font-size: 10pt; font-weight: 600; margin-bottom: 0.15cm;">Voucher</div>
-                  <div style="font-size: 9pt; margin-top: 0.15cm; color: #000;">${paymentTypeText}</div>
-                </div>
-                <div style="display: flex; justify-content: space-between; margin-bottom: 0.3cm; font-size: 9pt; padding: 0 0.2cm;">
-                  <div style="flex: 1;">
-                    <div style="font-weight: bold; margin-bottom: 0.1cm; color: #000;">Vr. No.</div>
-                    <div style="border-bottom: 1px solid #000; padding-bottom: 0.08cm; min-height: 0.5cm; color: #000;">${escapeHtml(v.voucherNumber)}</div>
-                  </div>
-                  <div style="flex: 1; margin-left: 0.5cm;">
-                    <div style="font-weight: bold; margin-bottom: 0.1cm; color: #000;">Date:</div>
-                    <div style="border-bottom: 1px solid #000; padding-bottom: 0.08cm; min-height: 0.5cm; color: #000;">${escapeHtml(formatDate(v.date))}</div>
-                  </div>
-                </div>
-                <div style="margin-bottom: 0.25cm; font-size: 9pt; padding: 0 0.2cm;">
-                  <div style="font-weight: bold; margin-bottom: 0.1cm; color: #000;">Account Head</div>
-                  <div style="border: 1px solid #000; padding: 0.25cm; min-height: 1cm; background: white; color: #000;">${escapeHtml(v.accountHead)}</div>
-                </div>
-                <div style="margin-bottom: 0.25cm; font-size: 9pt; padding: 0 0.2cm;">
-                  <div style="font-weight: bold; margin-bottom: 0.1cm; color: #000;">Pay to</div>
-                  <div style="border-bottom: 1px solid #000; padding-bottom: 0.08cm; min-height: 0.5cm; color: #000;">${escapeHtml(v.payTo)}</div>
-                </div>
-                <div style="margin-bottom: 0.25cm; font-size: 9pt; padding: 0 0.2cm;">
-                  <div style="font-weight: bold; margin-bottom: 0.1cm; color: #000;">the sum of Rs.</div>
-                  <div style="border-bottom: 1px solid #000; padding-bottom: 0.08cm; min-height: 0.5cm; color: #000;">${escapeHtml(v.sumOfRs)}</div>
-                </div>
-                <div style="margin-bottom: 0.25cm; font-size: 9pt; padding: 0 0.2cm;">
-                  <div style="font-weight: bold; margin-bottom: 0.1cm; color: #000;">towards</div>
-                  <div style="border-bottom: 1px solid #000; padding-bottom: 0.08cm; min-height: 0.5cm; color: #000;">${escapeHtml(v.towards)}</div>
-                </div>
-                <div style="margin-bottom: 0.25cm; font-size: 9pt; width: 50%; padding: 0 0.2cm;">
-                  <div style="font-weight: bold; margin-bottom: 0.1cm; color: #000;">Rs.</div>
-                  <div style="border-bottom: 1px solid #000; padding-bottom: 0.08cm; min-height: 0.5cm; color: #000;">${v.amount.toFixed(2)}</div>
-                </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 0.3cm; margin-top: 1.5cm; padding-top: 1cm; padding: 0 0.2cm;">
-                  <div>
-                    <div style="border-bottom: 1px solid #000; height: 0.7cm; margin-bottom: 0.15cm;"></div>
-                    <div style="font-weight: bold; font-size: 8pt; color: #000;">Prepared by</div>
-                  </div>
-                  <div>
-                    <div style="border-bottom: 1px solid #000; height: 0.7cm; margin-bottom: 0.15cm;"></div>
-                    <div style="font-weight: bold; font-size: 8pt; color: #000;">Checked by</div>
-                  </div>
-                  <div>
-                    <div style="border-bottom: 1px solid #000; height: 0.7cm; margin-bottom: 0.15cm;"></div>
-                    <div style="font-weight: bold; font-size: 8pt; color: #000;">Approved by</div>
-                  </div>
-                  <div>
-                    <div style="border-bottom: 1px solid #000; height: 0.7cm; margin-bottom: 0.15cm;"></div>
-                    <div style="font-weight: bold; font-size: 8pt; color: #000;">Recd. Payment</div>
-                  </div>
+            return `
+              <div class="voucher" style="border: 2px dashed #ccc; background: #f9f9f9;">
+                <div style="text-align: center; padding: 3cm 0; color: #999; font-size: 10pt;">
+                  Empty Slot
                 </div>
               </div>
             `
           }
           
-          pairDiv.appendChild(voucherDiv)
-        })
+          return generateVoucherHTML(v, formatDate)
+        }).join('')
         
-        tempContainer.appendChild(pairDiv)
-      })
+        return `<div class="voucher-pair">${pairHTML}</div>`
+      }).join('')
 
-      // Wait for images to load
-      await new Promise(resolve => setTimeout(resolve, 500))
+      // Write the same HTML structure as print function
+      const printHTML = `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <title>PDF Vouchers - AVA Voucher</title>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <style>
+              @page {
+                size: A4;
+                margin: 0;
+              }
+              * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+              }
+              body {
+                font-family: 'Arial', 'Helvetica', sans-serif;
+                margin: 0;
+                padding: 0;
+                background: white;
+              }
+              .voucher-pair {
+                display: flex;
+                flex-direction: column;
+                gap: 0.3cm;
+                page-break-after: always;
+                height: 29.7cm;
+                padding: 0.5cm;
+              }
+              .voucher-pair:last-child {
+                page-break-after: auto;
+              }
+              .voucher {
+                border: 2px solid #000;
+                padding: 0.4cm;
+                width: 100%;
+                height: calc(50% - 0.15cm);
+                display: flex;
+                flex-direction: column;
+                background: white;
+                position: relative;
+              }
+              .voucher::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                right: 0;
+                width: 0.3cm;
+                height: 100%;
+                background-color: #f472b6;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+              }
+            </style>
+          </head>
+          <body>
+            ${voucherHTML}
+          </body>
+        </html>
+      `
+
+      iframe.contentDocument?.write(printHTML)
+      iframe.contentDocument?.close()
+
+      // Wait for iframe to load
+      await new Promise(resolve => setTimeout(resolve, 1000))
 
       // Create PDF
       const pdf = new jsPDF({
@@ -614,26 +601,30 @@ export default function Home() {
         format: 'a4'
       })
 
-      // Convert each pair to canvas and add to PDF
-      for (let i = 0; i < pairs.length; i++) {
-        const pairDiv = tempContainer.children[i] as HTMLElement
-        if (!pairDiv) continue
+      const iframeBody = iframe.contentDocument?.body
+      if (!iframeBody) {
+        throw new Error('Failed to load iframe content')
+      }
 
-        // Wait a bit more for styles to apply
+      // Convert each pair to canvas and add to PDF
+      const pairElements = iframeBody.querySelectorAll('.voucher-pair')
+      for (let i = 0; i < pairElements.length; i++) {
+        const pairElement = pairElements[i] as HTMLElement
+        if (!pairElement) continue
+
+        // Wait a bit for rendering
         await new Promise(resolve => setTimeout(resolve, 200))
 
-        const canvas = await html2canvas(pairDiv, {
-          scale: 3, // Higher scale for better quality
+        const canvas = await html2canvas(pairElement, {
+          scale: 3,
           useCORS: true,
           logging: false,
           backgroundColor: '#ffffff',
-          width: pairDiv.offsetWidth,
-          height: pairDiv.offsetHeight,
+          width: pairElement.offsetWidth,
+          height: pairElement.offsetHeight,
           allowTaint: false,
-          // Ensure colors are preserved
           onclone: (clonedDoc) => {
-            // Force pink strip to be visible
-            const pinkStrips = clonedDoc.querySelectorAll('[style*="f472b6"]')
+            const pinkStrips = clonedDoc.querySelectorAll('[style*="f472b6"], .voucher::after')
             pinkStrips.forEach((strip: any) => {
               if (strip) {
                 strip.style.backgroundColor = '#f472b6'
@@ -656,7 +647,7 @@ export default function Home() {
       }
 
       // Clean up
-      document.body.removeChild(tempContainer)
+      document.body.removeChild(iframe)
       document.body.removeChild(loadingMsg)
 
       // Download PDF
@@ -664,15 +655,14 @@ export default function Home() {
       pdf.save(fileName)
     } catch (error) {
       console.error('Download error:', error)
-      // Remove loading message if still present
+      // Clean up on error
+      const iframe = document.querySelector('iframe[style*="-9999px"]') as HTMLIFrameElement
+      if (iframe) {
+        document.body.removeChild(iframe)
+      }
       const loadingMsg = document.querySelector('[style*="Generating PDF"]') as HTMLElement
       if (loadingMsg) {
         document.body.removeChild(loadingMsg)
-      }
-      // Clean up temp container if still present
-      const tempContainer = document.querySelector('[style*="-9999px"]') as HTMLElement
-      if (tempContainer) {
-        document.body.removeChild(tempContainer)
       }
       alert('An error occurred while downloading the PDF. Please try again.')
     }

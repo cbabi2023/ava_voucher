@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useMemo, memo } from 'react'
 import { Voucher } from '../types/voucher'
+import { numberToWords } from '../utils/numberToWords'
 
 interface VoucherFormProps {
   onSave: (voucher: Voucher) => void
@@ -53,10 +54,21 @@ function VoucherForm({ onSave, voucher }: VoucherFormProps) {
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: name === 'amount' ? parseFloat(value) || 0 : value
-    }))
+    const numValue = name === 'amount' ? parseFloat(value) || 0 : null
+    
+    setFormData(prev => {
+      const newData = {
+        ...prev,
+        [name]: numValue !== null ? numValue : value
+      }
+      
+      // Auto-fill sumOfRs when amount changes
+      if (name === 'amount' && numValue !== null && numValue > 0) {
+        newData.sumOfRs = numberToWords(numValue)
+      }
+      
+      return newData
+    })
   }, [])
 
   const handleSubmit = useCallback((e: React.FormEvent) => {
@@ -192,15 +204,30 @@ function VoucherForm({ onSave, voucher }: VoucherFormProps) {
       </div>
 
       <div>
-        <label className="voucher-label">Sum of Rs</label>
+        <label className="voucher-label">Amount (Rs) <span className="text-xs text-gray-500">(Enter number - words will auto-fill)</span></label>
+        <input
+          type="number"
+          name="amount"
+          value={formData.amount}
+          onChange={handleChange}
+          className="voucher-input"
+          step="0.01"
+          min="0"
+          required
+          placeholder="0.00"
+        />
+      </div>
+
+      <div>
+        <label className="voucher-label">Sum of Rs (Amount in Words) <span className="text-xs text-gray-500">(Auto-filled, editable)</span></label>
         <input
           type="text"
           name="sumOfRs"
           value={formData.sumOfRs}
           onChange={handleChange}
-          className="voucher-input"
+          className="voucher-input bg-gray-50"
           required
-          placeholder="Amount in words"
+          placeholder="Amount in words (auto-filled from amount)"
         />
       </div>
 
@@ -214,21 +241,6 @@ function VoucherForm({ onSave, voucher }: VoucherFormProps) {
           className="voucher-input"
           required
           placeholder="Payment purpose"
-        />
-      </div>
-
-      <div>
-        <label className="voucher-label">Amount (Rs)</label>
-        <input
-          type="number"
-          name="amount"
-          value={formData.amount}
-          onChange={handleChange}
-          className="voucher-input"
-          step="0.01"
-          min="0"
-          required
-          placeholder="0.00"
         />
       </div>
 
